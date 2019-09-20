@@ -3,17 +3,21 @@
 import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import LoginScreen from './Authentication/LoginScreen';
-import TestScreen from './Test';
+import HomeScreen from './Home';
 import AuthLoadingScreen from './AuthLoadingScreen';
+
+//Switch
+import SwitchesListScreen from './Switch/SwitchesListScreen';
 
 const AppNavigator = createStackNavigator(
   {
     AuthLoading: AuthLoadingScreen,
     Login: LoginScreen,
-    Test: TestScreen,
+    Home: HomeScreen,
+    SwitchesList: SwitchesListScreen,
   },
   {
-    initialRouteName: 'AuthLoading',
+    initialRouteName: 'SwitchesList',
     defaultNavigationOptions: {
       header: null,
     },

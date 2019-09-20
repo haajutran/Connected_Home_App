@@ -37,6 +37,32 @@ export const mapDispatchToProps = dispatch => {
         console.log(e);
       }
     },
+    confirmEmail: async email => {
+      try {
+        var res = await dataService.post(
+          `api/accounts/generateconfirmationcode/${email}`,
+        );
+        console.log(res);
+        return res;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    signUp: async data => {
+      try {
+        var res = await dataService.post('api/accounts/registerwithcode', data);
+        console.log(res);
+        // if (res.status === 200 && res.data.access_token) {
+        //   await AsyncStorage.setItem(
+        //     constant.CURRENT_USER,
+        //     JSON.stringify(res.data),
+        //   );
+        // }
+        return res;
+      } catch (e) {
+        console.log(e);
+      }
+    },
     // hau: () => () => {
     //   console.log('hau');
     // },

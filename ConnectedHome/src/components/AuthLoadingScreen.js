@@ -18,7 +18,7 @@ class AuthLoadingScreen extends React.Component {
       if (isExpired) {
         this.props.navigation.navigate('Login');
       } else {
-        this.props.navigation.navigate('Test');
+        this.props.navigation.navigate('Home');
       }
     } else {
       this.props.navigation.navigate('Login');

@@ -1,5 +1,11 @@
 import React from 'react';
-import {StyleSheet, ImageBackground, KeyboardAvoidingView} from 'react-native';
+import {
+  StyleSheet,
+  ImageBackground,
+  KeyboardAvoidingView,
+  View,
+  ScrollView,
+} from 'react-native';
 import {connect} from 'react-redux';
 import * as authStore from '../../store/Authentication';
 import {
@@ -18,6 +24,7 @@ import CardView from 'react-native-cardview';
 import BI from '../../assets/img/background.jpg';
 import * as validation from '../../services/Validate';
 import Toast from 'react-native-simple-toast';
+import SignUpScreen from './SignUp';
 
 class LoginScreen extends React.Component {
   constructor(props) {
@@ -34,7 +41,6 @@ class LoginScreen extends React.Component {
       modalVisible: false,
     };
   }
-  componentWillMount() {}
 
   login = async () => {
     // Handle Button press
@@ -48,7 +54,7 @@ class LoginScreen extends React.Component {
       };
       const loginRes = await this.props.login(data);
       if (loginRes.status === 200) {
-        this.props.navigation.navigate('Test');
+        this.props.navigation.navigate('Home');
         return;
       } else {
         Toast.show(loginRes.data);
@@ -122,61 +128,67 @@ class LoginScreen extends React.Component {
 
     return (
       <ImageBackground style={{width: '100%', height: '100%'}} source={BI}>
-        <KeyboardAvoidingView behavior="position" enabled>
-          <Text style={styles.h1} category="h1">
-            CONNECTED HOME
-          </Text>
-          <ImageBackground style={styles.authContent}>
-            <TabView
-              selectedIndex={this.state.selectedIndex}
-              shouldLoadComponent={this.shouldLoadTabContent}
-              onSelect={this.onSelect}
-              tabBarStyle={styles.tab}
-              indicatorStyle={{backgroundColor: '#fff'}}>
-              <Tab title="ĐĂNG NHẬP" titleStyle={styles.title}>
-                <Layout style={styles.tabContent}>
-                  <CardView
-                    cardElevation={5}
-                    cardMaxElevation={5}
-                    cornerRadius={5}
-                    style={styles.cardContent}>
-                    <Input
-                      value={this.state.email}
-                      onChangeText={this.onEmailChange}
-                      style={styles.input}
-                      status={!emailIsValid && 'danger'}
-                      caption={!emailIsValid && emailMessage}
-                      placeholder="Email"
-                      keyboardType="email-address"
-                      returnKeyType="next"
-                      onSubmitEditing={() => this.passwordRef.focus()}
-                    />
-                    <Input
-                      value={this.state.password}
-                      onChangeText={this.onPasswordChange}
-                      style={styles.input}
-                      status={!passwordIsValid && 'danger'}
-                      caption={!passwordIsValid && passwordMessage}
-                      placeholder="Mật khẩu"
-                      autoCompleteType="email"
-                      ref={ref => (this.passwordRef = ref)}
-                      secureTextEntry
-                    />
-                    <Button size="large" onPress={this.login}>
-                      ĐĂNG NHẬP
-                    </Button>
-                  </CardView>
-                </Layout>
-              </Tab>
-              <Tab title="ĐĂNG KÝ" titleStyle={styles.title}>
-                <Layout level="3">
-                  <Text>This is modal</Text>
-                  {/* <Button onPress={this.setModalVisible}>Hide Modal</Button> */}
-                </Layout>
-              </Tab>
-            </TabView>
-          </ImageBackground>
-        </KeyboardAvoidingView>
+        <ScrollView
+          behavior="height"
+          keyboardVerticalOffset={64}
+          style={{marginTop: '5%', flex: 1}}
+          enabled>
+          <View>
+            <Text style={styles.h1} category="h1">
+              CONNECTED HOME
+            </Text>
+            <ImageBackground style={styles.authContent}>
+              <TabView
+                selectedIndex={this.state.selectedIndex}
+                shouldLoadComponent={this.shouldLoadTabContent}
+                onSelect={this.onSelect}
+                tabBarStyle={styles.tab}
+                indicatorStyle={{backgroundColor: '#fff'}}>
+                <Tab title="ĐĂNG NHẬP" titleStyle={styles.title}>
+                  <Layout style={styles.tabContent}>
+                    <CardView
+                      cardElevation={5}
+                      cardMaxElevation={5}
+                      cornerRadius={5}
+                      style={styles.cardContent}>
+                      <Input
+                        value={this.state.email}
+                        onChangeText={this.onEmailChange}
+                        style={styles.input}
+                        status={!emailIsValid && 'danger'}
+                        caption={!emailIsValid && emailMessage}
+                        placeholder="Email"
+                        keyboardType="email-address"
+                        returnKeyType="next"
+                        onSubmitEditing={() => this.passwordRef.focus()}
+                      />
+                      <Input
+                        value={this.state.password}
+                        onChangeText={this.onPasswordChange}
+                        style={styles.input}
+                        status={!passwordIsValid && 'danger'}
+                        caption={!passwordIsValid && passwordMessage}
+                        placeholder="Mật khẩu"
+                        autoCompleteType="email"
+                        ref={ref => (this.passwordRef = ref)}
+                        secureTextEntry
+                        onSubmitEditing={this.login}
+                      />
+                      <Button size="large" onPress={this.login}>
+                        ĐĂNG NHẬP
+                      </Button>
+                    </CardView>
+                  </Layout>
+                </Tab>
+                <Tab title="ĐĂNG KÝ" titleStyle={styles.title}>
+                  <Layout style={styles.tabContent}>
+                    <SignUpScreen />
+                  </Layout>
+                </Tab>
+              </TabView>
+            </ImageBackground>
+          </View>
+        </ScrollView>
         {/* <Input
           value={this.state.inputValue}
           onChangeText={this.onInputValueChange}

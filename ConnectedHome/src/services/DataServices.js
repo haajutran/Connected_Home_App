@@ -1,13 +1,16 @@
-import * as authService from './AuthServices';
+import * as authServices from './AuthServices';
 import * as constant from './Constant';
 import axios from 'axios';
 
-function getHeader() {
+async function getHeader() {
+  const loggedUser = await authServices.getLoggedInUser();
+  const token = loggedUser.access_token;
   var header = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
-    Authorization: 'Bearer ' + authService.getLoggedInUser().access_token,
+    Authorization: 'Bearer ' + token,
   };
+  console.log(header);
   return header;
 }
 
@@ -41,41 +44,35 @@ export const login = async data => {
 };
 
 export const get = async url => {
-  // console.log(constant.BASE_URL + url);
-  return await axios
-    .get(constant.BASE_URL + url, {headers: getHeader()})
-    .then(res => {
-      return res;
-    })
-    .catch(error => {
-      console.log(error.message);
-      if (
-        error.response &&
-        (error.response.status === 401 || error.response.status === 403)
-      ) {
-        error.response.data =
-          'Tài khoản của bạn chưa được phân quyền để lấy dữ liệu trên trang này';
-      }
-      return error.response;
+  try {
+    const header = await getHeader();
+
+    const res = await axios.get(constant.BASE_URL + url, {
+      headers: header,
     });
+    console.log(res);
+    return res;
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 
 export const post = async (url, data) => {
-  console.log('hau dep trai');
-  return await axios
-    .post(constant.BASE_URL + url, JSON.stringify(data), {
-      headers: getHeader(),
-    })
-    .then(res => {
-      return res;
-    })
-    .catch(error => {
-      if (error.response.status === 401 || error.response.status === 403) {
-        error.response.data =
-          'Tài khoản của bạn chưa được phân quyền để thực hiện tính năng này';
-      }
-      return error.response;
-    });
+  try {
+    const header = await getHeader();
+
+    const res = await axios.post(
+      constant.BASE_URL + url,
+      JSON.stringify(data),
+      {
+        headers: header,
+      },
+    );
+    console.log(res);
+    return res;
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 
 export const upload = async (url, file) => {

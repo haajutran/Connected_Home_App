@@ -17,7 +17,7 @@ const AppNavigator = createStackNavigator(
     SwitchesList: SwitchesListScreen,
   },
   {
-    initialRouteName: 'SwitchesList',
+    initialRouteName: 'AuthLoading',
     defaultNavigationOptions: {
       header: null,
     },

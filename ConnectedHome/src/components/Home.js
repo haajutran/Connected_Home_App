@@ -5,6 +5,7 @@ import {
   AsyncStorage,
   StyleSheet,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import {
   Layout,
@@ -55,22 +56,23 @@ class HomeScreen extends React.Component {
 
   render() {
     const items = [
-      {name: 'TURQUOISE', code: '#1abc9c'},
-      {name: 'EMERALD', code: '#2ecc71'},
-      {name: 'PETER RIVER', code: '#3498db'},
-      {name: 'AMETHYST', code: '#9b59b6'},
-      {name: 'WET ASPHALT', code: '#34495e'},
+      {
+        name: 'Switch',
+        icon: 'toggle-left',
+        backgroundColors: ['#00d2ff', '#6fa5f1'],
+      },
     ];
     return (
-      <Layout>
-        <TopNavigation
-          title="Connected Home"
-          titleStyle={styles.title}
-          alignment="center"
-          leftControl={this.renderLeftControl()}
-          rightControls={this.renderRightControl()}
-        />
-
+      <View style={{flex: 1}}>
+        <View>
+          <TopNavigation
+            title="Connected Home"
+            titleStyle={styles.title}
+            alignment="center"
+            leftControl={this.renderLeftControl()}
+            rightControls={this.renderRightControl()}
+          />
+        </View>
         <FlatGrid
           itemDimension={130}
           items={items}
@@ -82,24 +84,23 @@ class HomeScreen extends React.Component {
             // <TouchableOpacity></TouchableOpacity>
             <Touchable
               onPress={() => this.redirectTo('SwitchesList')}
-              style={{
-                backgroundColor: '#eee',
-              }}
-              background={Touchable.Ripple('blue')}>
+              background={Touchable.Ripple('blue')}
+              style={{flex: 1}}>
               <LinearGradient
-                colors={['#00d2ff', '#6fa5f1']}
+                colors={item.backgroundColors}
                 //   start={[0.0, 0.5]}
                 //   end={[1.0, 0.5]}
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 0}}
                 locations={[0.0, 1.0]}
                 style={[styles.itemContainer]}>
-                <Icon style={styles.itemIcon} name={'toggle-left'} size={80} />
+                <Icon style={styles.itemIcon} name={item.icon} size={80} />
+                <Text style={[styles.name]}>{item.name}</Text>
               </LinearGradient>
             </Touchable>
           )}
         />
-      </Layout>
+      </View>
     );
   }
 }
@@ -108,7 +109,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
   },
-  gridView: {},
+  gridView: {
+    // flex: 1,
+  },
   itemContainer: {
     justifyContent: 'flex-end',
     borderRadius: 15,
@@ -121,13 +124,18 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-
     elevation: 5,
   },
   itemIcon: {
     alignSelf: 'center',
-    lineHeight: 130,
+    lineHeight: 100,
     color: '#fff',
+  },
+  name: {
+    fontSize: 20,
+    textAlign: 'center',
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
 

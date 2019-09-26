@@ -46,6 +46,7 @@ class HomeScreen extends React.Component {
       <TopNavigationAction
         icon={this.renderRightControlIcon}
         // onPress={this.onLeftControlPress}
+        onPress={() => this.redirectTo('SmartConfig')}
       />
     );
   };

@@ -19,6 +19,12 @@ const AppNavigator = createStackNavigator(
     SmartConfig: SmartConfigScreen,
   },
   {
+    initialRouteName: 'AuthLoading',
+    defaultNavigationOptions: {
+      header: null,
+    },
+  },
+  {
     initialRouteName: 'SmartConfig',
     defaultNavigationOptions: {
       header: null,
@@ -26,12 +32,6 @@ const AppNavigator = createStackNavigator(
   },
   {
     initialRouteName: 'Home',
-    defaultNavigationOptions: {
-      header: null,
-    },
-  },
-  {
-    initialRouteName: 'AuthLoading',
     defaultNavigationOptions: {
       header: null,
     },

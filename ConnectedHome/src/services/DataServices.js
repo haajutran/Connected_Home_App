@@ -84,9 +84,11 @@ export const upload = async (url, file) => {
 };
 
 export const put = async (url, data) => {
+  const header = await getHeader();
+
   return await axios
     .put(constant.BASE_URL + url, JSON.stringify(data), {
-      headers: getHeader(),
+      headers: header,
     })
     .then(res => {
       return res;
@@ -101,8 +103,9 @@ export const put = async (url, data) => {
 };
 
 export const remove = async url => {
+  const header = await getHeader();
   return await axios
-    .delete(constant.BASE_URL + url, {headers: getHeader()})
+    .delete(constant.BASE_URL + url, {headers: header})
     .then(res => {
       return res;
     })

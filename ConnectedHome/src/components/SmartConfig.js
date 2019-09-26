@@ -23,11 +23,41 @@ class SmartConfigScreen extends React.Component {
       ssid: 'EIU FACULTY/STAFF',
       password: 'EIU.edu@!%',
       scanning: false,
+      listDevice: [],
+      ownUpdate: false,
     };
+
+    this.smartConfigScan = this.smartConfigScan.bind(this);
+    this.connectToStoreAndAddDevice = this.connectToStoreAndAddDevice.bind(
+      this,
+    );
   }
 
+  componentWillReceiveProps(nexProps) {
+    console.log(nexProps);
+    if (nexProps.addSwitchIntoAccoutnSuccess === true) {
+      this.setState({scanning: false, listDevice: nexProps.addedDevices});
+    }
+  }
+
+  // static getDerivedStateFromProps(props, state) {
+  //   console.log(state);
+  //   console.log(props);
+  //   if (!state.ownUpdate) {
+  //     if (props.addSwitchIntoAccoutnSuccess === true) {
+  //       return {
+  //         scanning: false,
+  //         listDevice: props.addedDevices,
+  //       };
+  //     }
+  //   }
+
+  //   // Return null if the state hasn't changed
+  //   return null;
+  // }
+
   render() {
-    const {ssid, password, scanning} = this.state;
+    const {ssid, password, scanning, listDevice} = this.state;
 
     return (
       <ImageBackground style={{width: '100%', height: '100%'}} source={BI}>
@@ -75,6 +105,36 @@ class SmartConfigScreen extends React.Component {
                   )}
                 </CardView>
               </Layout>
+
+              {listDevice && listDevice.length > 0 && (
+                <Layout style={styles.tabContent}>
+                  <CardView
+                    cardElevation={5}
+                    cardMaxElevation={5}
+                    cornerRadius={5}
+                    style={styles.cardContent}>
+                    <View>
+                      <Text style={styles.h4}>
+                        ĐÃ THÊM THIẾT BỊ VÀO DANH SÁCH THIẾT BỊ CỦA TÀI KHOẢN
+                      </Text>
+                    </View>
+                    <View>
+                      {listDevice.map((device, index) => (
+                        <Text style={styles.device} key={index}>
+                          - {device.code} - {device.name}
+                        </Text>
+                      ))}
+                    </View>
+                    <Button
+                      size="large"
+                      onPress={() =>
+                        this.setState({listDevice: null, ownUpdate: true})
+                      }>
+                      OK
+                    </Button>
+                  </CardView>
+                </Layout>
+              )}
             </ImageBackground>
           </View>
         </ScrollView>
@@ -82,7 +142,11 @@ class SmartConfigScreen extends React.Component {
     );
   }
 
-  smartConfigScan = async () => {
+  async connectToStoreAndAddDevice(results) {
+    this.props.registerDevice(results);
+  }
+
+  async smartConfigScan() {
     const {ssid, password} = this.state;
     this.setState({scanning: true});
     //#region check valid ssid and password
@@ -97,6 +161,7 @@ class SmartConfigScreen extends React.Component {
       this.setState({scanning: false});
       return;
     }
+
     //#endregion
 
     //#region Bắt đầu dò những thiết bị xung quanh
@@ -107,29 +172,18 @@ class SmartConfigScreen extends React.Component {
       password: password,
       timeout: 20000, //now doesn't not effect
     })
-      .then(function(results) {
+      .then(results => {
+        console.log('do');
         //Array of device success do smartconfig
-        this.props.registerDevice(results);
-        /*[
-    {
-      'bssid': 'device-bssi1', //device bssid
-      'ipv4': '192.168.1.11' //local ip address
-    },
-    {
-      'bssid': 'device-bssi2', //device bssid
-      'ipv4': '192.168.1.12' //local ip address
-    },
-    ...
-  ]*/
+        this.connectToStoreAndAddDevice(results);
       })
-      .catch(function(error) {
+      .catch(error => {
         console.log(error);
         Toast.show('Có lỗi xảy ra trong quá trình dò. Vui lòng thử lại');
+        this.setState({scanning: false});
       });
     //#endregion
-
-    this.setState({scanning: false});
-  };
+  }
 }
 
 const styles = StyleSheet.create({
@@ -143,6 +197,10 @@ const styles = StyleSheet.create({
     color: 'blue',
     marginBottom: 10,
     fontSize: 20,
+  },
+  device: {
+    textAlign: 'left',
+    fontSize: 15,
   },
   authContent: {
     padding: 20,

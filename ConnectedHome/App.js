@@ -13,6 +13,24 @@ import Navigator from './src/components/Navigator';
 import {PersistGate} from 'redux-persist/integration/react';
 import {Provider} from 'react-redux';
 import {store, persistor} from './src/store/store';
+import axios from 'axios';
+
+axios.interceptors.response.use(
+  response => {
+    console.log('1');
+    return response;
+  },
+  err => {
+    console.log('2');
+    // const {config, response} = err;
+    // const isExpiredToken = checkIsExpiredToken();
+    return Promise.reject(err);
+  },
+);
+
+checkIsExpiredToken = () => {
+  return true;
+};
 
 const App = () => {
   return (

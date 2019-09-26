@@ -24,7 +24,6 @@ export const mapDispatchToProps = dispatch => {
     login: async data => {
       try {
         const res = await dataService.login(data);
-        console.log(res);
         if (res.status === 200 && res.data.access_token) {
           console.log('hello');
           await AsyncStorage.setItem(
@@ -34,7 +33,7 @@ export const mapDispatchToProps = dispatch => {
         }
         return res;
       } catch (e) {
-        console.log(e);
+        console.log(e.message);
       }
     },
     confirmEmail: async email => {
@@ -42,58 +41,24 @@ export const mapDispatchToProps = dispatch => {
         var res = await dataService.post(
           `api/accounts/generateconfirmationcode/${email}`,
         );
-        console.log(res);
         return res;
       } catch (e) {
-        console.log(e);
+        console.log(e.message);
       }
     },
     signUp: async data => {
       try {
         var res = await dataService.post('api/accounts/registerwithcode', data);
-        console.log(res);
-        // if (res.status === 200 && res.data.access_token) {
-        //   await AsyncStorage.setItem(
-        //     constant.CURRENT_USER,
-        //     JSON.stringify(res.data),
-        //   );
-        // }
         return res;
       } catch (e) {
-        console.log(e);
+        console.log(e.message);
       }
     },
-    // hau: () => () => {
-    //   console.log('hau');
-    // },
-    // hau: () => {
-    //   console.log('hau');
-    // },
-    // // Decrease Counter
-    // reduxDecreaseCounter: payload =>
-    //   dispatch({
-    //     type: 'DECREASE_COUNTER',
-    //     payload: payload,
-    //   }),
-    // // Login
-    // reduxLogin: payload =>
-    //   dispatch({
-    //     type: 'LOGGED_IN',
-    //     payload: payload,
-    //   }),
   };
 };
 
 export const authReducer = (state = initialState, action) => {
   switch (action.type) {
-    // case 'INCREASE_COUNTER': {
-    //   return {
-    //     ...state,
-    //     counter: state.counter + 1,
-    //   };
-    // }
-
-    // Default
     default: {
       return state;
     }

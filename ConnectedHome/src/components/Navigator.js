@@ -31,7 +31,7 @@ const AppNavigator = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'SwitchesList',
+    initialRouteName: 'AuthLoading',
     defaultNavigationOptions: {
       header: null,
     },

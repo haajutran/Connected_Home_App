@@ -189,6 +189,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    compile project(':react-native-smartconfig')
     implementation "com.facebook.react:react-native:+"  // From node_modules
     // If your app supports Android versions before Ice Cream Sandwich (API level 14)
     implementation 'com.facebook.fresco:animated-base-support:0.11.0'

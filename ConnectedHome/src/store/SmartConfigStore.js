@@ -12,7 +12,9 @@ export const mapStateToProps = state => {
 // Map Dispatch To Props (Dispatch Actions To Reducers. Reducers Then Modify The Data And Assign It To Your Props)
 export const mapDispatchToProps = dispatch => {
   // Action
-  return {};
+  return {
+    registerDevice: async listDevices => {},
+  };
 };
 
 export const smartConfigReducer = (state = initialState, action) => {

@@ -10,7 +10,7 @@ import {
   BackHandler,
 } from 'react-native';
 import {connect} from 'react-redux';
-import * as switchDetailStore from '../../store/SwitchDetail';
+import * as switchDetailStore from '../../store/Switch';
 import {
   Layout,
   TopNavigation,
@@ -45,17 +45,6 @@ class SwitchesListScreen extends React.Component {
   fetchData = () => {
     this.props.requestSwitches();
   };
-
-  turnSubSwitch(status, subSwitch) {
-    var switchStatus = {
-      subCode: subSwitch.code,
-      isOn: status,
-      description: (status == true ? 'Mở' : 'Tắt') + ' ' + subSwitch.name,
-    };
-    // console.log(status);
-    // console.log(switchStatus);
-    this.props.turnSubSwitch(switchStatus);
-  }
 
   _body(listItem) {
     const items = listItem.body;
@@ -142,8 +131,9 @@ class SwitchesListScreen extends React.Component {
               </CollapseHeader>
               <CollapseBody>
                 <SubSwitchScreen
-                  turnSubSwitch={this.turnSubSwitch}
                   subSwitches={switchItem.subSwitches}
+                  mainCode={switchItem.code}
+                  refreshData={this.fetchData}
                 />
               </CollapseBody>
             </Collapse>

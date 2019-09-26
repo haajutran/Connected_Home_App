@@ -18,18 +18,13 @@ const AppNavigator = createStackNavigator(
     SwitchesList: SwitchesListScreen,
     SmartConfig: SmartConfigScreen,
   },
-  {
-    initialRouteName: 'SmartConfig',
-    defaultNavigationOptions: {
-      header: null,
-    },
-  },
-  {
-    initialRouteName: 'Home',
-    defaultNavigationOptions: {
-      header: null,
-    },
-  },
+  // {
+  //   initialRouteName: 'SmartConfig',
+  //   defaultNavigationOptions: {
+  //     header: null,
+  //   },
+  // },
+
   {
     initialRouteName: 'AuthLoading',
     defaultNavigationOptions: {

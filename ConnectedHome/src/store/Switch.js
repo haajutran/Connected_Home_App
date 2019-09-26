@@ -1,12 +1,15 @@
 import * as dataService from '../services/DataServices';
 import * as constant from '../services/Constant';
 import * as authService from '../services/AuthServices';
+import * as signalR from '@aspnet/signalr';
 
 const initialState = {
   switches: {
     totalItems: 0,
     items: [],
   },
+  connection: undefined,
+  proxy: undefined,
 };
 
 export const mapStateToProps = state => {
@@ -15,28 +18,93 @@ export const mapStateToProps = state => {
   };
 };
 
+export const signalRLoadData = async dispatch => {
+  try {
+    dispatch({
+      type: 'REQUEST_SWITCH',
+    });
+    const currentUser = await authService.getLoggedInUser();
+    var res = await dataService.get(
+      `api/switches/getall?email=${currentUser.email}`,
+    );
+    console.log(res);
+    if (res.status === 200) {
+      dispatch({
+        type: 'RECEIVE_SWITCH',
+        switches: res.data,
+      });
+    }
+  } catch (e) {
+    console.log(e.message);
+  }
+};
+
 export const mapDispatchToProps = dispatch => {
   return {
     requestSwitches: async () => {
-      try {
-        dispatch({
-          type: 'REQUEST_SWITCH',
-        });
-        const currentUser = await authService.getLoggedInUser();
-        var res = await dataService.get(
-          `api/switches/getall?email=${currentUser.email}`,
-        );
-        console.log(res);
-        if (res.status === 200) {
-          dispatch({
-            type: 'RECEIVE_SWITCH',
-            switches: res.data,
+      const connection = new signalR.HubConnectionBuilder() //Connect to a hub
+        .withUrl('http://180.148.1.174:8082/hub', {
+          transport:
+            signalR.HttpTransportType.WebSockets |
+            signalR.HttpTransportType.LongPolling,
+          'content-type': 'application/json',
+          //accessTokenFactory: () => authToken, //for authorization
+        })
+        .configureLogging(signalR.LogLevel.Debug)
+        .build();
+      dispatch({
+        type: 'REQUEST_SWITCH',
+      });
+      const currentUser = await authService.getLoggedInUser();
+      var requestSwitchesRes = await dataService.get(
+        `api/switches/getall?email=${currentUser.email}`,
+      );
+      console.log(requestSwitchesRes);
+      if (requestSwitchesRes.status === 200) {
+        requestSwitchesRes.data.items.map(item => {
+          // alert('ádasdsa');
+          connection.on(`${item.code}/UpdateSubSwitch`, () => {
+            console.log('receive');
+            signalRLoadData(dispatch);
           });
-        }
-      } catch (e) {
-        console.log(e.message);
+        });
+
+        connection
+          .start()
+          .then(() => {
+            console.log('Chat Connection started.');
+            console.log('Now connected, connection ID=' + connection.id);
+          })
+          .catch(() => {
+            console.log('Error while establishing chatbus connection!');
+          });
       }
+      dispatch({
+        type: 'RECEIVE_SWITCH',
+        switches: requestSwitchesRes.data,
+      });
     },
+
+    // requestSwitches: async () => {
+    //   try {
+    //     dispatch({
+    //       type: 'REQUEST_SWITCH',
+    //     });
+    //     const currentUser = await authService.getLoggedInUser();
+    //     var res = await dataService.get(
+    //       `api/switches/getall?email=${currentUser.email}`,
+    //     );
+    //     console.log(res);
+    //     if (res.status === 200) {
+    //       dispatch({
+    //         type: 'RECEIVE_SWITCH',
+    //         switches: res.data,
+    //       });
+    //     }
+    //   } catch (e) {
+    //     console.log(e.message);
+    //   }
+    // },
     loadSwitchesData: async page => {
       // Only load data if it's something we don't already have (and are not already loading)
       const appState = getState();
@@ -208,12 +276,8 @@ export const switchReducer = (state = initialState, action) => {
       return {
         ...state,
         switches: action.switches,
-        page: action.page,
-        isAddSuccess: action.isAddSuccess,
-        isUpdateSuccess: action.isUpdateSuccess,
-        isDeleteSuccess: action.isDeleteSuccess,
-        errorMessage: action.errorMessage,
-        searchParam: action.searchParam,
+        connection: action.connection,
+        proxy: action.proxy,
       };
       break;
 

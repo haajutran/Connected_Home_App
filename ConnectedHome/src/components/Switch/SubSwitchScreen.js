@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
-import * as switchStore from '../../store/Switch';
+import * as switchStore from '../../store/SwitchDetail';
 import {Toggle} from 'react-native-ui-kitten';
 import {FlatGrid} from 'react-native-super-grid';
 import LinearGradient from 'react-native-linear-gradient';
@@ -27,16 +27,21 @@ class SwitchesListScreen extends React.Component {
     // this.props.requestSwitches();
   };
 
-  turnSubSwitch(status, subSwitch) {
+  turnSubSwitch = async (status, subSwitch) => {
+    const {mainCode} = this.props;
     var switchStatus = {
+      mainCode,
       subCode: subSwitch.code,
       isOn: status,
       description: (status == true ? 'Mở' : 'Tắt') + ' ' + subSwitch.name,
     };
-    // console.log(status);
-    // console.log(switchStatus);
-    this.props.turnSubSwitch(switchStatus);
-  }
+    const updateSubSwitchStatusRes = await this.props.addSwitchStatus(
+      switchStatus,
+    );
+    if (updateSubSwitchStatusRes.status === 200) {
+      this.props.refreshData();
+    }
+  };
 
   setCollapse = (itemCollapsed, i) => {
     if (itemCollapsed) {
@@ -48,7 +53,6 @@ class SwitchesListScreen extends React.Component {
 
   render() {
     const {subSwitches} = this.props;
-    console.log(subSwitches);
     return (
       <FlatGrid
         itemDimension={130}

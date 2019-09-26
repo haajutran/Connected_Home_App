@@ -1,5 +1,5 @@
 import {Action, Reducer} from 'redux';
-import * as signalR from '@aspnet/signalr';
+// import * as signalR from '@aspnet/signalr';
 import * as dataService from '../services/DataServices';
 import * as constant from '../services/Constant';
 import * as authService from '../services/AuthServices';
@@ -21,19 +21,19 @@ const initialState = {
 
 export const actionCreators = {};
 
-export const signalRLoadData = async (dispatch, getState) => {
-  const {id, switchStatusPage, startDate, endDate} = getState().switchDetail;
-  var switchDetail = await dataService.get(`api/switches/getswitch/${id}`);
-  var switchStatus = await dataService.get(
-    `api/switchstatuses/getall?mainswitchid=${id}&page=${switchStatusPage}&pagesize=10&startDate=${startDate}&endDate=${endDate}`,
-  );
+// export const signalRLoadData = async (dispatch, getState) => {
+//   const {id, switchStatusPage, startDate, endDate} = getState().switchDetail;
+//   var switchDetail = await dataService.get(`api/switches/getswitch/${id}`);
+//   var switchStatus = await dataService.get(
+//     `api/switchstatuses/getall?mainswitchid=${id}&page=${switchStatusPage}&pagesize=10&startDate=${startDate}&endDate=${endDate}`,
+//   );
 
-  dispatch({
-    type: 'REQUEST_SWITCH_DETAIL_SIGNALR_UPDATE',
-    switchDetail: switchDetail.data,
-    switchStatus: switchStatus.data,
-  });
-};
+//   dispatch({
+//     type: 'REQUEST_SWITCH_DETAIL_SIGNALR_UPDATE',
+//     switchDetail: switchDetail.data,
+//     switchStatus: switchStatus.data,
+//   });
+// };
 
 export const mapStateToProps = state => {
   return {
@@ -45,57 +45,57 @@ export const mapStateToProps = state => {
 export const mapDispatchToProps = dispatch => {
   // Action
   return {
-    loadSwitchDetailData: async id => {
-      // Only load data if it's something we don't already have (and are not already loading)
-      const appState = getState();
+    // loadSwitchDetailData: async id => {
+    //   // Only load data if it's something we don't already have (and are not already loading)
+    //   const appState = getState();
 
-      if (
-        appState &&
-        appState.switchDetail &&
-        id != null &&
-        id != appState.switchDetail.id
-      ) {
-        var switchDetail = await dataService.get(
-          `api/switches/getswitch/${id}`,
-        );
+    //   if (
+    //     appState &&
+    //     appState.switchDetail &&
+    //     id != null &&
+    //     id != appState.switchDetail.id
+    //   ) {
+    //     var switchDetail = await dataService.get(
+    //       `api/switches/getswitch/${id}`,
+    //     );
 
-        if (switchDetail.status == 200) {
-          var categories = await dataService.get(`api/categories/getall`);
+    //     if (switchDetail.status == 200) {
+    //       var categories = await dataService.get(`api/categories/getall`);
 
-          var hubConnection = new signalR.HubConnectionBuilder()
-            .withUrl('/hub')
-            .build();
-          console.log(switchDetail.data.code + '/UpdateSubSwitch');
-          hubConnection.on(switchDetail.data.code + '/UpdateSubSwitch', () => {
-            console.log('receive');
-            signalRLoadData(dispatch, getState);
-          });
+    //       var hubConnection = new signalR.HubConnectionBuilder()
+    //         .withUrl('/hub')
+    //         .build();
+    //       console.log(switchDetail.data.code + '/UpdateSubSwitch');
+    //       hubConnection.on(switchDetail.data.code + '/UpdateSubSwitch', () => {
+    //         console.log('receive');
+    //         signalRLoadData(dispatch, getState);
+    //       });
 
-          hubConnection
-            .start()
-            .then(() => {
-              console.log('Hub connection started');
-            })
-            .catch(err => {
-              console.log('Error while establishing connection');
-            });
+    //       hubConnection
+    //         .start()
+    //         .then(() => {
+    //           console.log('Hub connection started');
+    //         })
+    //         .catch(err => {
+    //           console.log('Error while establishing connection');
+    //         });
 
-          dispatch({
-            type: 'RECEIVE_SWITCH_DETAIL',
-            switchDetail: switchDetail.data,
-            id: id,
-            categories: categories.data,
-            hubConnection: hubConnection,
-          });
-        } else if (switchDetail.status == 404) {
-          dispatch({
-            type: 'REQUEST_SWITCH_DETAIL_ERROR',
-            errorMessage:
-              'Không tìm thấy switch tương ứng. Vui lòng kiểm tra lại.',
-          });
-        }
-      }
-    },
+    //       dispatch({
+    //         type: 'RECEIVE_SWITCH_DETAIL',
+    //         switchDetail: switchDetail.data,
+    //         id: id,
+    //         categories: categories.data,
+    //         hubConnection: hubConnection,
+    //       });
+    //     } else if (switchDetail.status == 404) {
+    //       dispatch({
+    //         type: 'REQUEST_SWITCH_DETAIL_ERROR',
+    //         errorMessage:
+    //           'Không tìm thấy switch tương ứng. Vui lòng kiểm tra lại.',
+    //       });
+    //     }
+    //   }
+    // },
 
     loadSwitchStatusData: async (id, page, startDate, endDate) => {
       // Only load data if it's something we don't already have (and are not already loading)
@@ -126,31 +126,16 @@ export const mapDispatchToProps = dispatch => {
     },
 
     addSwitchStatus: async switchStatus => {
-      const appState = getState();
-
-      var result = await dataService.post(
-        `api/switchstatuses/add`,
-        switchStatus,
-      );
-
-      if (result.status == 200) {
-        var switchDetail = appState.switchDetail
-          ? await dataService.get(
-              `api/switches/getswitch/${appState.switchDetail.id}`,
-            )
-          : null;
-
-        dispatch({
-          type: 'REQUEST_SWITCH_STATUS_ADD',
-          errorMessage: null,
-          switchDetail: switchDetail.data,
-          isSwitchStatusAddSuccess: true,
-        });
-      } else {
-        dispatch({
-          type: 'REQUEST_SWITCH_DETAIL_ERROR',
-          errorMessage: result.data,
-        });
+      // const appState = getState();
+      try {
+        var res = await dataService.post(
+          `api/switchstatuses/add`,
+          switchStatus,
+        );
+        console.log(res);
+        return res;
+      } catch (e) {
+        console.log(e.response);
       }
     },
 

@@ -3,7 +3,7 @@ import {AsyncStorage} from 'react-native';
 
 export const isUserAuthenticated = async () => {
   const user = await AsyncStorage.getItem(constant.CURRENT_USER);
-  console.log(user);
+
   if (user !== null) {
     return true;
   } else return false;
@@ -11,7 +11,7 @@ export const isUserAuthenticated = async () => {
 
 export const isExpired = async () => {
   const user = await getLoggedInUser();
-  console.log(user);
+
   if (user === null) {
     return true;
   } else if (new Date(user.expires) > new Date()) {

@@ -132,20 +132,17 @@ export const mapDispatchToProps = dispatch => {
           `api/switchstatuses/add`,
           switchStatus,
         );
-        console.log(res);
+
         return res;
-      } catch (e) {
-        console.log(e.response);
-      }
+      } catch (e) {}
     },
 
     updateSwitchDetail: async data => {
-      console.log(data);
       var result = await dataService.put(
         `api/switches/update/${data.id}`,
         data,
       );
-      console.log(result);
+
       var isUpdateSuccess = false;
       var errorMessage = null;
 

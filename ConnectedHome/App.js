@@ -17,11 +17,9 @@ import axios from 'axios';
 
 axios.interceptors.response.use(
   response => {
-    console.log('1');
     return response;
   },
   err => {
-    console.log('2');
     // const {config, response} = err;
     // const isExpiredToken = checkIsExpiredToken();
     return Promise.reject(err);

@@ -10,7 +10,7 @@ async function getHeader() {
     'Content-Type': 'application/json',
     Authorization: 'Bearer ' + token,
   };
-  console.log(header);
+
   return header;
 }
 
@@ -23,7 +23,6 @@ function getHeaderWithoutBearer() {
 }
 
 export const login = async data => {
-  console.log(data);
   try {
     const res = await axios.post(
       constant.BASE_URL + 'api/accounts/generatetoken',
@@ -32,7 +31,7 @@ export const login = async data => {
         headers: getHeaderWithoutBearer(),
       },
     );
-    console.log(data);
+
     return res;
   } catch (error) {
     if (error.response.status === 401 || error.response.status === 403) {
@@ -50,7 +49,7 @@ export const get = async url => {
     const res = await axios.get(constant.BASE_URL + url, {
       headers: header,
     });
-    console.log(res);
+
     return res;
   } catch (error) {
     console.log(error.message);
@@ -68,7 +67,7 @@ export const post = async (url, data) => {
         headers: header,
       },
     );
-    console.log(res);
+
     return res;
   } catch (error) {
     console.log(error.message);

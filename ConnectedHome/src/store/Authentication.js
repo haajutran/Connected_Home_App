@@ -9,8 +9,6 @@ const initialState = {
 
 // Map State To Props (Redux Store Passes State To Component)
 export const mapStateToProps = state => {
-  console.log('State:');
-  console.log(state);
   // Redux Store --> Component
   return {
     // counter: state.counterReducer.counter,
@@ -24,8 +22,8 @@ export const mapDispatchToProps = dispatch => {
     login: async data => {
       try {
         const res = await dataService.login(data);
+
         if (res.status === 200 && res.data.access_token) {
-          console.log('hello');
           await AsyncStorage.setItem(
             constant.CURRENT_USER,
             JSON.stringify(res.data),

@@ -49,12 +49,11 @@ class LoginScreen extends React.Component {
   sendConfirmEmail = async () => {
     // Handle Button press
     const {email} = this.state;
-    // console.log(validation.emailIsValid(email));
+
     const isValid = this.validateEmail(email);
-    console.log(isValid);
+
     if (isValid) {
       const confirmEmailRes = await this.props.confirmEmail(email);
-      console.log(confirmEmailRes);
 
       if (confirmEmailRes.status == 200) {
         this.setState({

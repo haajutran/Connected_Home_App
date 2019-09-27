@@ -27,7 +27,7 @@ export const signalRLoadData = async dispatch => {
     var res = await dataService.get(
       `api/switches/getall?email=${currentUser.email}`,
     );
-    console.log(res);
+
     if (res.status === 200) {
       dispatch({
         type: 'RECEIVE_SWITCH',
@@ -59,12 +59,11 @@ export const mapDispatchToProps = dispatch => {
       var requestSwitchesRes = await dataService.get(
         `api/switches/getall?email=${currentUser.email}`,
       );
-      console.log(requestSwitchesRes);
+
       if (requestSwitchesRes.status === 200) {
         requestSwitchesRes.data.items.map(item => {
           // alert('ádasdsa');
           connection.on(`${item.code}/UpdateSubSwitch`, () => {
-            console.log('receive');
             signalRLoadData(dispatch);
           });
         });

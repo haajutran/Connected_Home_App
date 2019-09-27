@@ -3,6 +3,7 @@ import {
   StyleSheet,
   ImageBackground,
   KeyboardAvoidingView,
+  ActivityIndicator,
   View,
   ScrollView,
 } from 'react-native';
@@ -39,20 +40,25 @@ class LoginScreen extends React.Component {
       emailMessage: '',
       passwordMessage: '',
       modalVisible: false,
+      logging: false,
     };
   }
 
   login = async () => {
+    console.log('dsd');
+    this.setState({logging: true});
     // Handle Button press
     const {email, password} = this.state;
-    // console.log(validation.emailIsValid(email));
+
     const isValid = this.validateInput(email, password);
+
     if (isValid) {
       const data = {
         email,
         password,
       };
       const loginRes = await this.props.login(data);
+      this.setState({logging: false});
       if (loginRes.status === 200) {
         this.props.navigation.navigate('Home');
         return;
@@ -119,6 +125,7 @@ class LoginScreen extends React.Component {
 
   render() {
     const {
+      logging,
       emailIsValid,
       passwordIsValid,
       emailMessage,
@@ -132,6 +139,7 @@ class LoginScreen extends React.Component {
           behavior="height"
           keyboardVerticalOffset={64}
           style={{marginTop: '5%', flex: 1}}
+          keyboardShouldPersistTaps="always"
           enabled>
           <View>
             <Text style={styles.h1} category="h1">
@@ -172,11 +180,17 @@ class LoginScreen extends React.Component {
                         autoCompleteType="email"
                         ref={ref => (this.passwordRef = ref)}
                         secureTextEntry
-                        onSubmitEditing={this.login}
+                        onSubmitEditing={() => this.login()}
                       />
-                      <Button size="large" onPress={this.login}>
-                        ĐĂNG NHẬP
-                      </Button>
+                      {logging === false ? (
+                        <Button size="large" onPress={() => this.login()}>
+                          ĐĂNG NHẬP
+                        </Button>
+                      ) : (
+                        <View style={styles.loading}>
+                          <ActivityIndicator size="large" color="#0000ff" />
+                        </View>
+                      )}
                     </CardView>
                   </Layout>
                 </Tab>
@@ -205,6 +219,11 @@ class LoginScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   h1: {
     textAlign: 'center',
     marginTop: 40,

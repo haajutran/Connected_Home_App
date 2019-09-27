@@ -34,27 +34,10 @@ class SmartConfigScreen extends React.Component {
   }
 
   componentWillReceiveProps(nexProps) {
-    console.log(nexProps);
     if (nexProps.addSwitchIntoAccoutnSuccess === true) {
       this.setState({scanning: false, listDevice: nexProps.addedDevices});
     }
   }
-
-  // static getDerivedStateFromProps(props, state) {
-  //   console.log(state);
-  //   console.log(props);
-  //   if (!state.ownUpdate) {
-  //     if (props.addSwitchIntoAccoutnSuccess === true) {
-  //       return {
-  //         scanning: false,
-  //         listDevice: props.addedDevices,
-  //       };
-  //     }
-  //   }
-
-  //   // Return null if the state hasn't changed
-  //   return null;
-  // }
 
   render() {
     const {ssid, password, scanning, listDevice} = this.state;
@@ -173,12 +156,10 @@ class SmartConfigScreen extends React.Component {
       timeout: 20000, //now doesn't not effect
     })
       .then(results => {
-        console.log('do');
         //Array of device success do smartconfig
         this.connectToStoreAndAddDevice(results);
       })
       .catch(error => {
-        console.log(error);
         Toast.show('Có lỗi xảy ra trong quá trình dò. Vui lòng thử lại');
         this.setState({scanning: false});
       });

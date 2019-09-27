@@ -7,14 +7,13 @@ import * as AuthServices from '../services/AuthServices';
 class AuthLoadingScreen extends React.Component {
   componentDidMount() {
     this.checkAuth();
-    console.log('hau dep trai');
   }
   checkAuth = async () => {
     const isLoggedIn = await AuthServices.isUserAuthenticated();
-    console.log(isLoggedIn);
+
     if (isLoggedIn) {
       const isExpired = await AuthServices.isExpired();
-      console.log(isExpired);
+
       if (isExpired) {
         this.props.navigation.navigate('Login');
       } else {

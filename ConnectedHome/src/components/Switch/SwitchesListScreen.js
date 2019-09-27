@@ -48,7 +48,7 @@ class SwitchesListScreen extends React.Component {
 
   _body(listItem) {
     const items = listItem.body;
-    console.log(listItem);
+
     return (
       <FlatGrid
         itemDimension={130}
@@ -90,14 +90,14 @@ class SwitchesListScreen extends React.Component {
     switchStatus.mainCode = this.props.switchDetail
       ? this.props.switchDetail.code
       : '';
-    // console.log(switchStatus);
+
     this.props.addSwitchStatus(switchStatus);
   };
 
   render() {
     const {itemCollapsed} = this.state;
     const {isLoading, switches} = this.props;
-    console.log(switches);
+
     return (
       <Layout>
         <View>
@@ -126,7 +126,6 @@ class SwitchesListScreen extends React.Component {
                   locations={[0.0, 1.0]}
                   style={[styles.switch]}>
                   <Text style={[styles.title]}>{switchItem.categoryName}</Text>
-                  {console.log(switchItem.subSwitches)}
                 </LinearGradient>
               </CollapseHeader>
               <CollapseBody>

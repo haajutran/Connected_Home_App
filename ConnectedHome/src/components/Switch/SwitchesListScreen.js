@@ -125,7 +125,7 @@ class SwitchesListScreen extends React.Component {
                   end={{x: 1, y: 0}}
                   locations={[0.0, 1.0]}
                   style={[styles.switch]}>
-                  <Text style={[styles.title]}>{switchItem.categoryName}</Text>
+                  <Text style={[styles.title]}>{switchItem.name}</Text>
                 </LinearGradient>
               </CollapseHeader>
               <CollapseBody>
